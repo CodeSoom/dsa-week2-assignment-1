@@ -1,5 +1,59 @@
+/*
+    2. 큐 그림
+    ================================
+    --->    E, L, P, M, A, X    --->
+    ================================
+*/
+
+// Spec에 따른 큐 구현
 class Queue {
+    #items;
+    #size;
+
+    constructor() {
+        this.#items = [];
+        this.#size = 0;
+    }
+
+    enqueue(item) {
+        this.#items.push(item);
+        this.#size = this.#size + 1;
+    }
+
+    dequeue() {
+        if (this.isEmpty()) {
+            throw new Error("큐가 비어있습니다");
+        }
+
+        const head = this.#items[0];
+        this.#items = [...this.#items.slice(1)];
+        this.#size = this.#size - 1;
+        return head;
+    }
+
+    size() {
+        return this.#size;
+    }
+
+    isEmpty() {
+        return this.#size === 0;
+    }
+
+    [Symbol.iterator]() {
+        let index = 0;
+        let data = this.#items;
+
+        return {
+            next() {
+                return index < data.length
+                    ? { done: false, value: data[index++] }
+                    : { done: true };
+            }
+        };
+    }
 }
+
+module.exports = { Queue };
 
 test('큐를 생성하면 비어있다', () => {
   const queue = new Queue();
