@@ -1,4 +1,15 @@
+const { Bag } = require("../problem-1-1/problem-1-1.test.js");
+
 const solution = (numbers) => {
+    const bag = new Bag();
+    numbers.forEach(x => bag.add(x));
+
+    let sum = 0;
+    for (const number of bag) {
+        sum += number;
+    }
+
+    return Math.floor(sum / bag.size());
 };
 
 test('숫자 배열의 평균을 반환한다', () => {
