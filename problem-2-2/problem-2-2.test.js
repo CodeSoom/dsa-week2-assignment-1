@@ -1,5 +1,33 @@
+const { Stack } = require('../problem-2-1/problem-2-1.test.js');
+
 const solution = (string) => {
+    const smallStack = new Stack();         // 소괄호
+    const midStack = new Stack();           // 중괄호
+    const bigStack = new Stack();           // 대괄호
+
+    for (const char of string) {
+        if (char == '(') smallStack.push(char);
+        if (char == '{') midStack.push(char);
+        if (char == '[') bigStack.push(char);
+
+        if (char == ')') {
+            if (smallStack.isEmpty()) return false;
+            else smallStack.pop();
+        }
+        if (char == '}') {
+            if (midStack.isEmpty()) return false;
+            else midStack.pop();
+        }
+        if (char == ']') {
+            if (bigStack.isEmpty()) return false;
+            else bigStack.pop();
+        }
+    }
+
+    return true;
 };
+
+// 지난 시간에 배운 재귀를 이용한 분할 정복 풀이법도 가능할 것 같은데 제가 구현을 못하겠습니다
 
 test('문자열에 포함된 괄호의 짝이 맞을 때 true를 반환한다', () => {
   expect(solution('{([])}')).toBe(true);
