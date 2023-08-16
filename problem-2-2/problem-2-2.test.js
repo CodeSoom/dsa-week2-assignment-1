@@ -1,4 +1,17 @@
 const solution = (string) => {
+  const sign = {
+    '{': '}', '[': ']', '(': ')',
+  };
+  const stack = [];
+  string.split('').forEach((str) => {
+    const lastStack = stack[stack.length - 1];
+    if (lastStack === str) {
+      stack.pop();
+    } else {
+      stack.push(sign[str]);
+    }
+  });
+  return stack.length === 0;
 };
 
 test('문자열에 포함된 괄호의 짝이 맞을 때 true를 반환한다', () => {
