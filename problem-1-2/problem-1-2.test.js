@@ -1,4 +1,9 @@
 const solution = (numbers) => {
+  let sum = 0;
+  numbers.forEach((num) => {
+    sum += num;
+  });
+  return Math.floor(sum / numbers.length);
 };
 
 test('숫자 배열의 평균을 반환한다', () => {

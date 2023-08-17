@@ -29,14 +29,14 @@ isFull() - 스택이 다 찼는지 확인
 isOneQuarter() - 스택의 아이템 수가 1/4 이하인지 확인
 */
 class Stack0 {
-  #capacity;
+  #capacity; // # : private로 선언. 따라서 class외부에선 접근할 수 없음
 
   #n;
 
   #items;
 
   constructor(capacity) {
-    this.#capacity = capacity; // # : private로 선언. 따라서 class외부에선 접근할 수 없음
+    this.#capacity = capacity;
     this.#n = 0; // item 갯수
     this.#items = new Array(capacity);
   }
@@ -83,7 +83,7 @@ class Stack0 {
 
     return {
       next() {
-        index = index - 1;
+        index = index - 1; // 클로져의 원리 때문에 함수 스코프가 사라져도 index값을 참조할 수 있는것
         if (index >= 0) {
           return { done: false, value: data[index] };
         }
@@ -113,8 +113,9 @@ class Stack {
       this.#capacity = this.#capacity * 2;
     }
     this.#oldNode = this.#first;
-    this.#first = item;
-    // [TODO] first와 oldNode 연결
+    this.#first = {}; // new Node()
+    this.#first.item = item;
+    this.#first.next = this.#oldNode;
     this.#n = this.#n + 1;
   }
 
@@ -126,9 +127,11 @@ class Stack {
     if (this.isOneQuarter()) {
       this.#capacity = this.#capacity / 4;
     }
-    const result = this.#first;
-    this.#first = this.#oldNode;
+    const result = this.#first.item;
+
+    this.#first = this.#first.next;
     this.#n = this.#n - 1;
+
     return result;
   }
 
@@ -145,7 +148,7 @@ class Stack {
   }
 
   isEmpty() {
-    return this.#first === undefined;
+    return this.#n === 0;
   }
 
   [Symbol.iterator]() {}
