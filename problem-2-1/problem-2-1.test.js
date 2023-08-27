@@ -1,22 +1,23 @@
 // [1] API 설계
 /*
  Stack() - 스택 생성
- push(string):void - 스택에 문자열 추가
- pop():number - 가장 최근에 추가된 아이템 꺼내기
- convert(string):number - 문자열을 숫자형으로 변환
+ push(item):void - 스택에 값 추가
+ pop():item - 가장 최근에 추가된 아이템 꺼내기
+ isEmpty():boolean - 스택이 비어있으면 true, 아니면 false 반환
  */
 
 // [2] 그림
 /*
-E
-L
-P
-M,(제거2)
-A(제거3)
-X
-A(제거1)
-S
-D
+| E |
+| L |
+| P |
+| M,(제거2) |
+| A(제거3) |
+| X |
+| A(제거1) |
+| S |
+| D |
+ㅡㅡㅡㅡ
 */
 
 // [3] 배열을 사용한 스택 자료구조
@@ -28,7 +29,7 @@ size():number - 스택의 아이템 수 반환
 isFull() - 스택이 다 찼는지 확인
 isOneQuarter() - 스택의 아이템 수가 1/4 이하인지 확인
 */
-class Stack0 {
+class Stack {
   #capacity; // # : private로 선언. 따라서 class외부에선 접근할 수 없음
 
   #n;
@@ -43,10 +44,10 @@ class Stack0 {
 
   push(item) {
     if (this.isFull()) {
-      this.#capacity = this.#capacity * 2;
+      this.#resize(this.#capacity * 2); // [강의]
     }
     this.#items[this.#n] = item;
-    this.#n = this.#n + 1;
+    this.#n++;
   }
 
   pop() {
@@ -54,11 +55,20 @@ class Stack0 {
       throw new Error('스택이 비어있습니다');
     }
     if (this.isOneQuarter()) {
-      this.#capacity = this.#capacity / 4;
+      this.#resize(Math.floor(this.#capacity / 2)); // [강의]
     }
 
-    this.#n = this.#n - 1;
+    this.#n--;
     return this.#items[this.#n];
+  }
+
+  #resize(size) {
+    const newItems = new Array(size);
+    this.#items.forEach((el, index) => {
+      newItems[index] = el;
+    });
+    this.#items = newItems;
+    this.#capacity = size;
   }
 
   size() {
@@ -70,7 +80,7 @@ class Stack0 {
   }
 
   isOneQuarter() {
-    return this.#n <= this.#capacity / 4;
+    return this.#n <= this.#capacity / 4 && this.#n > 0;
   }
 
   isEmpty() {
@@ -83,7 +93,7 @@ class Stack0 {
 
     return {
       next() {
-        index = index - 1; // 클로져의 원리 때문에 함수 스코프가 사라져도 index값을 참조할 수 있는것
+        index--; // 클로져의 원리 때문에 함수 스코프가 사라져도 index값을 참조할 수 있는것
         if (index >= 0) {
           return { done: false, value: data[index] };
         }
@@ -93,30 +103,30 @@ class Stack0 {
   }
 }
 
+module.exports = Stack;
+
 // [4] 연결리스트를 사용한 스택 자료구조
-class Stack {
+class Node {
+  item;
+
+  next;
+}
+
+class Stack0 {
   #first;
-
-  #oldNode;
-
-  #capacity;
 
   #n;
 
-  constructor(capacity) {
-    this.#capacity = capacity;
+  constructor() {
     this.#n = 0;
   }
 
   push(item) {
-    if (this.isFull()) {
-      this.#capacity = this.#capacity * 2;
-    }
-    this.#oldNode = this.#first;
-    this.#first = {}; // new Node()
+    const oldFirst = this.#first;
+    this.#first = new Node();
     this.#first.item = item;
-    this.#first.next = this.#oldNode;
-    this.#n = this.#n + 1;
+    this.#first.next = oldFirst;
+    this.#n++;
   }
 
   pop() {
@@ -124,13 +134,10 @@ class Stack {
       throw new Error('스택이 비어있습니다');
     }
 
-    if (this.isOneQuarter()) {
-      this.#capacity = this.#capacity / 4;
-    }
     const result = this.#first.item;
 
     this.#first = this.#first.next;
-    this.#n = this.#n - 1;
+    this.#n--;
 
     return result;
   }
@@ -139,19 +146,24 @@ class Stack {
     return this.#n;
   }
 
-  isFull() {
-    return this.#n === this.#capacity;
-  }
-
-  isOneQuarter() {
-    return this.#n <= this.#capacity / 4;
-  }
-
   isEmpty() {
-    return this.#n === 0;
+    return this.#first === undefined;
   }
 
-  [Symbol.iterator]() {}
+  [Symbol.iterator]() {
+    let current = this.#first;
+
+    return {
+      next() {
+        if (current === undefined) {
+          return { done: true };
+        }
+        const value = current.item;
+        current = current.next;
+        return { done: false, value };
+      },
+    };
+  }
 }
 
 test('스택을 생성하면 비어있다', () => {

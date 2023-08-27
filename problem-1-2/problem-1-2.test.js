@@ -1,9 +1,28 @@
+// const solution = (numbers) => {
+//   let sum = 0;
+//   numbers.forEach((num) => {
+//     sum += num;
+//   });
+//   return Math.floor(sum / numbers.length);
+// };
+
+// [강의 해설]
+const Bag = require('../problem-1-1/problem-1-1.test');
+
 const solution = (numbers) => {
-  let sum = 0;
+  const bag = new Bag();
+
   numbers.forEach((num) => {
-    sum += num;
+    bag.add(num);
   });
-  return Math.floor(sum / numbers.length);
+
+  let sum = 0;
+  for (const item of bag) {
+    sum += item;
+  }
+
+  const size = bag.size();
+  return Math.floor(sum / size);
 };
 
 test('숫자 배열의 평균을 반환한다', () => {

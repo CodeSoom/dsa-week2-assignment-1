@@ -13,17 +13,18 @@ size():number - 큐의 사이즈 확인
 */
 
 // [3] 큐 자료구조
-class Queue {
-  #capacity;
 
+class Queue {
   #items;
 
   #n;
 
+  #capacity;
+
   constructor(capacity) {
-    this.#capacity = capacity;
-    this.#n = 0;
     this.#items = new Array(capacity);
+    this.#n = 0;
+    this.#capacity = capacity;
   }
 
   enqueue(item) {
@@ -32,7 +33,7 @@ class Queue {
     }
     this.#items[this.#n] = (item);
     // this.#items.push(item); // 가장 나중에 삽입한게 먼저 나온다 에러남 왜?[질문]
-    this.#n = this.#n + 1;
+    this.#n += 1;
   }
 
   dequeue() {
@@ -40,8 +41,10 @@ class Queue {
       throw new Error('큐가 비어있습니다');
     }
 
-    this.#n = this.#n - 1;
+    this.#n -= 1;
+
     const result = this.#items[0];
+    // n이 증가할 때, 즉 큐의 크기가 증가할 수록 연산 횟수가 같이 증가하여 속도가 느려짐
     for (let i = 0; i < this.#n; i += 1) {
       this.#items[i] = this.#items[i + 1];
     }
@@ -68,6 +71,74 @@ class Queue {
         return index < data.length
           ? { done: false, value: data[index++] }
           : { done: true };
+      },
+    };
+  }
+}
+
+module.exports = Queue;
+
+// [4] 큐 자료구조 - 연결리스트로
+class Queue0 {
+  #last;
+
+  #first;
+
+  #n;
+
+  constructor() {
+    this.#n = 0;
+  }
+
+  enqueue(item) {
+    const oldFirst = this.#last;
+    this.#last = {}; // new Node()
+    this.#last.item = item;
+
+    if (this.isEmpty()) {
+      this.#first = this.#last;
+    } else {
+      oldFirst.next = this.#last;
+    }
+
+    this.#n += 1;
+  }
+
+  dequeue() {
+    if (this.isEmpty()) {
+      throw new Error('큐가 비어있습니다');
+    }
+
+    const result = this.#first.item;
+    this.#first = this.#first.next;
+
+    if (this.isEmpty()) {
+      this.#last = undefined;
+    }
+
+    this.#n -= 1;
+    return result;
+  }
+
+  isEmpty() {
+    return this.#n === 0;
+  }
+
+  size() {
+    return this.#n;
+  }
+
+  [Symbol.iterator]() {
+    let current = this.#first;
+
+    return {
+      next() {
+        if (current === undefined) {
+          return { done: true };
+        }
+        const value = current.item;
+        current = current.next;
+        return { done: false, value };
       },
     };
   }
@@ -105,7 +176,7 @@ test('큐에서 요소를 제거하면 개수가 감소한다', () => {
   expect(newSize - oldSize).toEqual(-1);
 });
 
-test('가장 나중에 삽입한게 먼저 나온다', () => {
+test('가장 먼저에 삽입한게 먼저 나온다', () => {
   const queue = new Queue();
 
   queue.enqueue('D');

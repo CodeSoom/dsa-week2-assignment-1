@@ -1,8 +1,11 @@
+// [나의 풀이]
+/*
 const solution = (string) => {
   const sign = {
     '{': '}', '[': ']', '(': ')',
   };
   const stack = [];
+
   string.split('').forEach((str) => {
     const lastStack = stack[stack.length - 1];
     if (lastStack === str) {
@@ -11,10 +14,48 @@ const solution = (string) => {
       stack.push(sign[str]);
     }
   });
+
   return stack.length === 0;
 };
+*/
 
-test('문자열에 포함된 괄호의 짝이 맞을 때 true를 반환한다', () => {
+// [강의 해설]
+
+const Stack = require('../problem-2-1/problem-2-1.test');
+
+const pairs = { '}': '{', ']': '[', ')': '(' };
+
+const isPair = (item, other) => pairs[item] === other;
+
+const isClosedBracket = (char) => [')', '}', ']'].some((it) => char === it);
+
+const solution = (string) => {
+  const stack = new Stack(string.length);
+
+  while (true) {
+    if (string === '') {
+      return stack.isEmpty();
+    }
+
+    const char = string[0];
+
+    if (isClosedBracket(char)) {
+      if (stack.isEmpty()) {
+        return false;
+      }
+      const item = stack.pop();
+      if (!isPair(char, item)) {
+        return false;
+      }
+    } else {
+      stack.push(char);
+    }
+
+    string = string.slice(1);
+  }
+};
+
+test.only('문자열에 포함된 괄호의 짝이 맞을 때 true를 반환한다', () => {
   expect(solution('{([])}')).toBe(true);
 });
 

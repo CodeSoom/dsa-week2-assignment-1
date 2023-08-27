@@ -1,3 +1,5 @@
+/*
+// [나의풀이]
 const solution = (N, M) => {
   let arr = new Array(N).fill(null);
   arr = arr.map((_, i) => i + 1);
@@ -10,6 +12,33 @@ const solution = (N, M) => {
     }
     arr = [...arr.slice(M - 1), ...arr.slice(0, M - 1)];
   }
+};
+*/
+
+// [강의 해설]
+const Queue = require('../problem-3-1/problem-3-1.test');
+
+const finalPosition = (queue, M) => {
+  if (queue.size() === 1) {
+    return queue.dequeue();
+  }
+
+  for (let i = 0; i < M - 1; i += 1) {
+    queue.enqueue(queue.dequeue());
+  }
+  queue.dequeue();
+  return finalPosition(queue, M);
+};
+
+const solution = (N, M) => {
+  const queue = new Queue();
+
+  const arr = Array.from({ length: N }, (_, index) => index + 1);
+  arr.forEach((item) => {
+    queue.enqueue(item);
+  });
+
+  return finalPosition(queue, M);
 };
 
 test('N명의 사람이 있을 때 M번째 사람을 없앨 때 마지막에 죽는 사람의 순서를 반환한다', () => {
