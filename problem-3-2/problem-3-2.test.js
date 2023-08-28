@@ -14,6 +14,9 @@ const solution = (N, M) => {
   }
 };
 */
+// [피드백] - 특정 길이의 배열을 만드는 방법
+// 내가 한 방법 : new Array(N).fill() <- 이렇게 하는 방법 보단, 아래 방법으로 더 많이 씀
+// 일반적인 방법 : Array.from({ length: N }, (_, i) => i + 1)); // !!
 
 // [강의 해설]
 const Queue = require('../problem-3-1/problem-3-1.test');

@@ -33,7 +33,7 @@ class Queue {
     }
     this.#items[this.#n] = (item);
     // this.#items.push(item); // 가장 나중에 삽입한게 먼저 나온다 에러남 왜?[질문]
-    this.#n += 1;
+    this.#n++;
   }
 
   dequeue() {
@@ -41,13 +41,12 @@ class Queue {
       throw new Error('큐가 비어있습니다');
     }
 
-    this.#n -= 1;
-
     const result = this.#items[0];
     // n이 증가할 때, 즉 큐의 크기가 증가할 수록 연산 횟수가 같이 증가하여 속도가 느려짐
     for (let i = 0; i < this.#n; i += 1) {
-      this.#items[i] = this.#items[i + 1];
+      this.#items[i - 1] = this.#items[i];
     }
+    this.#n--;
     return result;
   }
 
@@ -66,9 +65,10 @@ class Queue {
   [Symbol.iterator]() {
     let index = 0;
     const data = [...this.#items];
+    const n = this.#n;
     return {
       next() {
-        return index < data.length
+        return index < n
           ? { done: false, value: data[index++] }
           : { done: true };
       },
@@ -79,6 +79,14 @@ class Queue {
 module.exports = Queue;
 
 // [4] 큐 자료구조 - 연결리스트로
+// last가 가리키고 있는 곳에서만 enqueue, first가 가리키고 잇는 곳에서만 dequeue를 한다.
+
+class Node {
+  item;
+
+  next;
+}
+
 class Queue0 {
   #last;
 
@@ -92,7 +100,7 @@ class Queue0 {
 
   enqueue(item) {
     const oldFirst = this.#last;
-    this.#last = {}; // new Node()
+    this.#last = new Node();
     this.#last.item = item;
 
     if (this.isEmpty()) {

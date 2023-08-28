@@ -1,4 +1,4 @@
-// [나의 풀이]
+// 1. [스택 원리를 이용한 풀이]
 /*
 const solution = (string) => {
   const sign = {
@@ -19,8 +19,36 @@ const solution = (string) => {
 };
 */
 
-// [강의 해설]
+// 2. [2-1번 스택api를 이용한 풀이]
+// const Stack = require('../problem-2-1/problem-2-1.test');
 
+// const pairs = { '}': '{', ']': '[', ')': '(' };
+// const isClose = (firstChar) => ['(', '{', ']'].some((item) => item === firstChar);
+
+// const solution = (string) => {
+//   const stack = new Stack(string.length);
+
+//   while (true) {
+//     if (stack.isEmpty()) {
+//       return true;
+//     }
+//     const firstChar = string[0];
+
+//     if (isClose(firstChar)) {
+//       if (stack.isEmpty()) {
+//         return false; // stack이 이미 다 없어졌는데 닫는거 하나만 남아서 짝이 없을 때
+//       }
+//       if (pairs[firstChar] !== stack.pop()) {
+//         return false;
+//       }
+//     } else {
+//       stack.push(firstChar);
+//     }
+//     string = string.slice(1);
+//   }
+// };
+
+// 3. [강의 해설]
 const Stack = require('../problem-2-1/problem-2-1.test');
 
 const pairs = { '}': '{', ']': '[', ')': '(' };
@@ -34,21 +62,21 @@ const solution = (string) => {
 
   while (true) {
     if (string === '') {
-      return stack.isEmpty();
+      return stack.isEmpty(); // 스택이 비었으면 true, 아니면 false
     }
 
-    const char = string[0];
+    const firstChar = string[0];
 
-    if (isClosedBracket(char)) {
+    if (isClosedBracket(firstChar)) {
       if (stack.isEmpty()) {
-        return false;
+        return false; // 스택이 이미 다 제거되서 짝이 맞는 경우가 없는 경우 false
       }
-      const item = stack.pop();
-      if (!isPair(char, item)) {
-        return false;
+      const topItem = stack.pop();
+      if (!isPair(firstChar, topItem)) {
+        return false; // 대칭이 안맞으면 false
       }
     } else {
-      stack.push(char);
+      stack.push(firstChar);
     }
 
     string = string.slice(1);
