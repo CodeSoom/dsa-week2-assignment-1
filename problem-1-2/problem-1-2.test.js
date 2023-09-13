@@ -1,4 +1,52 @@
+class Bag {
+  #items = [];
+
+  isEmpty() {
+    return this.size() === 0;
+  }
+
+  size() {
+    return this.#items.length;
+  }
+
+  add(item) {
+    this.#items.push(item);
+  }
+
+  sum() {
+    return this.#items.reduce((acc, cur) => acc + cur, 0);
+  }
+
+  [Symbol.iterator]() {
+    let index = 0;
+    const data = [...this.#items];
+
+    return {
+      next() {
+        if (index < data.length) {
+          const value = data[index];
+          index += 1;
+
+          return {
+            done: false,
+            value,
+          };
+        }
+
+        return { done: true };
+      },
+    };
+  }
+}
+
 const solution = (numbers) => {
+  const scores = new Bag();
+
+  numbers.forEach((number) => {
+    scores.add(number);
+  });
+
+  return Math.floor(scores.sum() / scores.size());
 };
 
 test('숫자 배열의 평균을 반환한다', () => {
