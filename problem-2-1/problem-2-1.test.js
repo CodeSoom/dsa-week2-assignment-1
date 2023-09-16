@@ -1,4 +1,56 @@
 class Stack {
+  #n = -1;
+
+  #items = [];
+
+  isEmpty() {
+    return this.#n === -1;
+  }
+
+  size() {
+    return this.#n + 1;
+  }
+
+  push(item) {
+    this.#items.push(item);
+    this.#n += 1;
+  }
+
+  pop() {
+    if (this.size() === 0) {
+      throw new Error('스택이 비어있습니다');
+    }
+
+    const popped = this.#items[this.#n];
+
+    // TODO: 이렇게 구현하는 이유는?
+    this.#items[this.#n] = undefined;
+
+    this.#n -= 1;
+
+    return popped;
+  }
+
+  [Symbol.iterator]() {
+    let index = this.#items.length - 1;
+    const data = [...this.#items];
+
+    return {
+      next() {
+        if (index >= 0) {
+          const value = data[index];
+          index -= 1;
+
+          return {
+            done: false,
+            value,
+          };
+        }
+
+        return { done: true };
+      },
+    };
+  }
 }
 
 test('스택을 생성하면 비어있다', () => {
