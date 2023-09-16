@@ -12,8 +12,8 @@ class Stack {
   }
 
   push(item) {
-    this.#items.push(item);
     this.#n += 1;
+    this.#items[this.#n] = item;
   }
 
   pop() {
