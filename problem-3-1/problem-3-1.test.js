@@ -1,4 +1,50 @@
 class Queue {
+  #items = [];
+
+  isEmpty() {
+    return this.size() === 0;
+  }
+
+  size() {
+    return this.#items.length;
+  }
+
+  enqueue(item) {
+    this.#items.push(item);
+  }
+
+  dequeue() {
+    if (this.isEmpty()) {
+      throw new Error('큐가 비어있습니다');
+    }
+
+    const item = this.#items[0];
+
+    this.#items = this.#items.slice(1);
+
+    return item;
+  }
+
+  [Symbol.iterator]() {
+    let index = 0;
+    const data = [...this.#items];
+
+    return {
+      next() {
+        if (index < data.length) {
+          const value = data[index];
+          index += 1;
+
+          return {
+            done: false,
+            value,
+          };
+        }
+
+        return { done: true };
+      },
+    };
+  }
 }
 
 test('큐를 생성하면 비어있다', () => {
