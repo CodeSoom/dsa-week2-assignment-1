@@ -1,16 +1,46 @@
+class LinkedNode {
+  item;
+
+  next;
+
+  constructor(item, next) {
+    this.item = item;
+
+    if (next) {
+      this.next = next;
+    }
+  }
+}
+
 class Queue {
-  #items = [];
+  #first;
+
+  #last;
+
+  #size = 0;
 
   isEmpty() {
     return this.size() === 0;
   }
 
   size() {
-    return this.#items.length;
+    return this.#size;
   }
 
   enqueue(item) {
-    this.#items.push(item);
+    const node = new LinkedNode(item);
+
+    if (this.isEmpty()) {
+      this.#first = node;
+      this.#last = node;
+    } else {
+      const oldLast = this.#last;
+
+      this.#last = node;
+      oldLast.next = this.#last;
+    }
+
+    this.#size += 1;
   }
 
   dequeue() {
@@ -18,22 +48,24 @@ class Queue {
       throw new Error('큐가 비어있습니다');
     }
 
-    const item = this.#items[0];
+    const { item } = this.#first;
 
-    this.#items = this.#items.slice(1);
+    this.#first = this.#first.next;
+
+    this.#size -= 1;
 
     return item;
   }
 
   [Symbol.iterator]() {
-    let index = 0;
-    const data = [...this.#items];
+    let current = this.#first;
 
     return {
       next() {
-        if (index < data.length) {
-          const value = data[index];
-          index += 1;
+        if (current) {
+          const value = current.item;
+
+          current = current.next;
 
           return {
             done: false,
