@@ -54,6 +54,10 @@ class Queue {
 
     this.#size -= 1;
 
+    if (this.isEmpty()) {
+      this.#last = undefined;
+    }
+
     return item;
   }
 
