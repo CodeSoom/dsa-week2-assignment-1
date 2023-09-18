@@ -19,17 +19,14 @@ class Bag {
 
     return {
       next() {
-        if (index < data.length) {
-          const value = data[index];
-          index += 1;
-
-          return {
-            done: false,
-            value,
-          };
+        if (index >= data.length) {
+          return { done: true };
         }
 
-        return { done: true };
+        const value = data[index];
+        index += 1;
+
+        return { done: false, value };
       },
     };
   }
