@@ -1,4 +1,83 @@
+class LinkedNode {
+  item;
+
+  next;
+
+  constructor(item, next) {
+    this.item = item;
+
+    if (next) {
+      this.next = next;
+    }
+  }
+}
+
 class Queue {
+  #first;
+
+  #last;
+
+  #size = 0;
+
+  isEmpty() {
+    return this.size() === 0;
+  }
+
+  size() {
+    return this.#size;
+  }
+
+  enqueue(item) {
+    const node = new LinkedNode(item);
+
+    if (this.isEmpty()) {
+      this.#first = node;
+      this.#last = node;
+    } else {
+      const oldLast = this.#last;
+
+      this.#last = node;
+      oldLast.next = this.#last;
+    }
+
+    this.#size += 1;
+  }
+
+  dequeue() {
+    if (this.isEmpty()) {
+      throw new Error('큐가 비어있습니다');
+    }
+
+    const { item } = this.#first;
+
+    this.#first = this.#first.next;
+
+    this.#size -= 1;
+
+    if (this.isEmpty()) {
+      this.#last = undefined;
+    }
+
+    return item;
+  }
+
+  [Symbol.iterator]() {
+    let current = this.#first;
+
+    return {
+      next() {
+        if (!current) {
+          return { done: true };
+        }
+
+        const value = current.item;
+
+        current = current.next;
+
+        return { done: false, value };
+      },
+    };
+  }
 }
 
 test('큐를 생성하면 비어있다', () => {

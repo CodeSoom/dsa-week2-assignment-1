@@ -1,4 +1,70 @@
+class NodeItem {
+  item;
+
+  next;
+
+  constructor(item) {
+    this.item = item;
+  }
+}
+
 class Stack {
+  #first;
+
+  #size = 0;
+
+  isEmpty() {
+    return this.#first === undefined;
+  }
+
+  size() {
+    return this.#size;
+  }
+
+  push(item) {
+    const oldFirst = this.#first;
+
+    this.#first = new NodeItem(item);
+
+    this.#first.next = oldFirst;
+
+    this.#size += 1;
+  }
+
+  pop() {
+    if (this.isEmpty()) {
+      throw new Error('스택이 비어있습니다');
+    }
+
+    const popped = this.#first;
+
+    this.#first = this.#first.next;
+
+    this.#size -= 1;
+
+    return popped.item;
+  }
+
+  [Symbol.iterator]() {
+    let current = this.#first;
+
+    return {
+      next() {
+        if (current !== undefined) {
+          const value = current.item;
+
+          current = current.next;
+
+          return {
+            value,
+            done: false,
+          };
+        }
+
+        return { done: true };
+      },
+    };
+  }
 }
 
 test('스택을 생성하면 비어있다', () => {
