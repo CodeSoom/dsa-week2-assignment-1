@@ -13,8 +13,8 @@ class Bag {
     this.#items.push(item);
   }
 
-  sum() {
-    return this.#items.reduce((acc, cur) => acc + cur, 0);
+  sum(operator = (acc, item) => acc + item, initialValue = 0) {
+    return this.#items.reduce(operator, initialValue);
   }
 
   [Symbol.iterator]() {
@@ -46,7 +46,9 @@ const solution = (numbers) => {
     scores.add(number);
   });
 
-  return Math.floor(scores.sum() / scores.size());
+  const operator = (acc, item) => acc + item;
+
+  return Math.floor(scores.sum(operator, 0) / scores.size());
 };
 
 test('숫자 배열의 평균을 반환한다', () => {
