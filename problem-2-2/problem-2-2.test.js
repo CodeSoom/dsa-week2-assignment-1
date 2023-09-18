@@ -32,13 +32,13 @@ class Stack {
       throw new Error('스택이 비어있습니다');
     }
 
-    const popped = this.#items[this.#n];
+    const item = this.#items[this.#n];
 
     this.#items[this.#n] = undefined;
 
     this.#n -= 1;
 
-    return popped;
+    return item;
   }
 
   get length() {
