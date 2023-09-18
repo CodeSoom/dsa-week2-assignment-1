@@ -66,18 +66,15 @@ class Queue {
 
     return {
       next() {
-        if (current) {
-          const value = current.item;
-
-          current = current.next;
-
-          return {
-            done: false,
-            value,
-          };
+        if (!current) {
+          return { done: true };
         }
 
-        return { done: true };
+        const value = current.item;
+
+        current = current.next;
+
+        return { done: false, value };
       },
     };
   }
