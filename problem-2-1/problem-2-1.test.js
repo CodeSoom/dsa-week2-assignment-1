@@ -1,4 +1,76 @@
+class Node {
+  item;
+  next;
+}
+
 class Stack {
+  _n;
+  _first;
+
+  constructor() {
+    this._n = 0;
+  }
+
+  push(item) {
+    const newItem = new Node();
+
+    if (this.isEmpty()) {
+      this._first = newItem;
+      this._first.item = item;
+    } else {
+      const oldFirst = this._first;
+
+      this._first = newItem;
+      this._first.item = item;
+      this._first.next = oldFirst;
+    }
+
+    this._n = this._n + 1;
+  }
+
+  pop() {
+    if (this.isEmpty()) {
+      throw new Error('스택이 비어있습니다');
+    }
+
+    const target = this._first;
+
+    if (this._first.next) {
+      this._first = this._first.next;
+    } else {
+      this._first = undefined;
+    }
+
+    this._n = this._n - 1;
+
+    return target.item;
+  }
+
+  isEmpty() {
+    return this._n === 0;
+  }
+
+  size() {
+    return this._n;
+  }
+
+  [Symbol.iterator]() {
+    let cur = this._first;
+
+    return {
+      next() {
+        if (cur) {
+          const value = cur.item;
+
+          cur = cur.next;
+
+          return { done: false, value };
+        }
+
+        return { done: true };
+      }
+    };
+  }
 }
 
 test('스택을 생성하면 비어있다', () => {
