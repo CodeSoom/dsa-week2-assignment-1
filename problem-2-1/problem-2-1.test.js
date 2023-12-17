@@ -1,10 +1,76 @@
+class Node {
+  item;
+  next;
+}
+
 class Stack {
+  #first;
+  #n;
+
+  constructor() {
+    this.#n = 0;
+  }
+
+  push(item) {
+    const oldFirst = this.#first;
+
+    this.#first = new Node();
+    this.#first.item = item;
+    this.#first.next = oldFirst;
+
+    this.#n++;
+  }
+
+  pop() {
+    if (this.#first === undefined) {
+      throw new Error('스택이 비어있습니다');
+    }
+
+    const item = this.#first.item;
+    this.#n--;
+    this.#first = this.#first.next;
+
+    return item;
+  }
+
+  isEmpty() {
+    return this.#first === undefined;
+  }
+
+  size() {
+    return this.#n;
+  }
+
+  [Symbol.iterator]() {
+    let current = this.#first;
+
+    return {
+      next: () => {
+        if (current === undefined) {
+          return { done: true };
+        }
+
+        const value = current.item;
+        current = current.next;
+
+        return { done: false, value };
+      },
+    };
+  }
 }
 
 test('스택을 생성하면 비어있다', () => {
   const stack = new Stack();
 
   expect(stack.isEmpty()).toEqual(true);
+});
+
+test('isEmpty 스택에 아이템이 있으면 false를 반환한다.', () => {
+  const stack = new Stack();
+
+  stack.push('D');
+
+  expect(stack.isEmpty()).toEqual(false);
 });
 
 test('스택에 값을 추가하면 개수가 증가한다', () => {
