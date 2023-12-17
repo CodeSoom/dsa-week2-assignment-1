@@ -4,7 +4,9 @@
 
 | 함수 시그니처 | 설명 |
 | ----------- | ----------- |
-| sample(string): number | 문자열을 입력으로 받아 숫자로 변환해서 반환합니다 |
+| isEmpty(): boolean | 값이 비어있는지 여부를 boolean으로 리턴합니다. |
+| add(item: string): void | Bag안에 item을 추가합니다 |
+| size(): number | 현재 Bag의 길이를 반환합니다. |
 
 2. 다음 값들을 백에 추가했을 때 어떻게 되는지 그림으로 그려보세요.
 
