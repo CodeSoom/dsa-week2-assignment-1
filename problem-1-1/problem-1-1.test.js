@@ -1,4 +1,30 @@
 class Bag {
+  #bag = [];
+
+  isEmpty() {
+    return this.#bag.length === 0;
+  }
+
+  add(item) {
+    this.#bag.push(item);
+  }
+
+  size() {
+    return this.#bag.length;
+  }
+
+  [Symbol.iterator]() {
+    let index = 0;
+    const bag = [...this.#bag];
+
+    return {
+      next() {
+        return index < bag.length
+          ? { done: false, value: bag[index++] }
+          : { done: true };
+      },
+    };
+  }
 }
 
 test('백은 비어있는 상태로 생성된다', () => {
