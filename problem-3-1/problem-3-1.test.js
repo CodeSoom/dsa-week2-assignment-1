@@ -1,42 +1,18 @@
+class Node {
+  #item;
+
+  #next;
+}
+
 class Queue {
-  #capacity;
+  #first;
+
+  #last;
 
   #numberOfItems;
 
-  #items;
-
-  constructor(capacity) {
-    this.#capacity = capacity;
+  constructor() {
     this.#numberOfItems = 0;
-    this.#items = new Array(capacity);
-  }
-
-  enqueue(item) {
-    if (this.isFull()) {
-      throw new Error('용량이 꽉 찼습니다.');
-    }
-
-    this.#items[this.#numberOfItems] = item;
-    this.#numberOfItems += 1;
-  }
-
-  dequeue() {
-    if (this.isEmpty()) {
-      throw new Error('큐가 비어있습니다');
-    }
-
-    // First In, First Out = FIFO
-    const firstItem = this.#items[0];
-
-    // todo : 남은 item 들을 각각 앞으로 옮겨야 한다.
-    for (let index = 1; index < this.#numberOfItems; index += 1) {
-      this.#items[index - 1] = this.#items[index];
-    }
-
-    // item 을 하나 꺼냈으므로 아이템 수 - 1
-    this.#numberOfItems -= 1;
-
-    return firstItem;
   }
 
   isEmpty() {
@@ -47,20 +23,46 @@ class Queue {
     return this.#numberOfItems;
   }
 
-  isFull() {
-    return this.#numberOfItems === this.#capacity;
+  enqueue(item) {
+    const oldLast = this.#last;
+    this.#last = new Node();
+    this.#last.item = item;
+
+    if (this.isEmpty()) {
+      this.#first = this.#last;
+    } else {
+      oldLast.next = this.#last;
+    }
+
+    this.#numberOfItems += 1;
+  }
+
+  dequeue() {
+    if (this.isEmpty()) {
+      throw new Error('큐가 비어있습니다');
+    }
+
+    const firstItem = this.#first.item;
+    this.#first = this.#first.next;
+
+    this.#numberOfItems -= 1;
+
+    return firstItem;
   }
 
   [Symbol.iterator]() {
-    let index = 0;
-    const items = this.#items;
-    const numberOfItems = this.#numberOfItems;
+    let current = this.#first;
 
     return {
       next() {
-        return index < numberOfItems
-          ? { done: false, value: items[index++] }
-          : { done: true };
+        if (current === undefined) {
+          return { done: true };
+        }
+
+        const value = current.item;
+        current = current.next;
+
+        return { done: false, value };
       },
     };
   }
