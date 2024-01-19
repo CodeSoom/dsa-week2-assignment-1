@@ -1,21 +1,46 @@
+class Node {
+  #item;
+
+  #next;
+}
+
 class Bag {
-  #bag = [];
+  #first;
 
-  isEmpty() {
-    return this.#bag.length === 0;
-  }
+  #numberOfItems;
 
-  add(item) {
-    this.#bag.push(item);
+  constructor() {
+    this.#numberOfItems = 0;
   }
 
   size() {
-    return this.#bag.length;
+    return this.#numberOfItems;
+  }
+
+  isEmpty() {
+    return this.#numberOfItems === 0;
+  }
+
+  add(item) {
+    const oldFirst = this.#first;
+
+    this.#first = new Node();
+    this.#first.item = item;
+    this.#first.next = oldFirst;
+
+    this.#numberOfItems += 1;
   }
 
   sum() {
-    const initialValue = 0;
-    return this.#bag.reduce((acc, currentValue) => acc + currentValue, initialValue);
+    let sum = 0;
+    let current = this.#first;
+
+    while (current !== undefined) {
+      sum += current.item;
+      current = current.next;
+    }
+
+    return sum;
   }
 
   average() {
@@ -23,14 +48,17 @@ class Bag {
   }
 
   [Symbol.iterator]() {
-    let index = 0;
-    const bag = [...this.#bag];
-
+    let current = this.#first;
     return {
       next() {
-        return index < bag.length
-          ? { done: false, value: bag[index++] }
-          : { done: true };
+        if (current === undefined) {
+          return { done: true };
+        }
+
+        const value = current.item;
+        current = current.next;
+
+        return { done: false, value };
       },
     };
   }
