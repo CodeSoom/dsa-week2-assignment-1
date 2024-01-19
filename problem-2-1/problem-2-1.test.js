@@ -1,43 +1,16 @@
+class Node {
+  #item;
+
+  #next;
+}
+
 class Stack {
-  #capacity;
+  #first;
 
   #numberOfItem;
 
-  #items;
-
-  constructor(capacity) {
-    this.#capacity = capacity;
+  constructor() {
     this.#numberOfItem = 0;
-    this.#items = new Array(capacity);
-  }
-
-  push(item) {
-    // Last In, First Out = LIFO
-    // todo: 아이템을 추가할 때 더 이상 추가할 수 없다면 배열의 크기를 2배로 늘리기
-    if (this.isFull()) {
-      this.#capacity = this.#capacity * 2;
-    }
-
-    this.#items[this.#numberOfItem] = item;
-    this.#numberOfItem += 1;
-  }
-
-  pop() {
-    if (this.isEmpty()) {
-      throw new Error('스택이 비어있습니다.');
-    }
-
-    // todo: 아이템을 제거할 때 아이템의 수가 1 / 4이하라면 배열의 크기를 1/2로 줄이기
-    if (this.isLessThanQuarter()) {
-      this.#capacity = this.#capacity / 2;
-    }
-
-    this.#numberOfItem -= 1;
-    return this.#items[this.#numberOfItem];
-  }
-
-  isLessThanQuarter() {
-    return this.#numberOfItem <= this.#capacity / 4;
   }
 
   isEmpty() {
@@ -48,18 +21,42 @@ class Stack {
     return this.#numberOfItem;
   }
 
-  isFull() {
-    return this.#numberOfItem === this.#capacity;
+  push(item) {
+    // todo : 맨 앞에 아이템을 넣는 방식.
+    const oldFirst = this.#first;
+
+    this.#first = new Node();
+    this.#first.item = item;
+    this.#first.next = oldFirst;
+
+    this.#numberOfItem += 1;
+  }
+
+  pop() {
+    if (this.isEmpty()) {
+      throw new Error('스택이 비어있습니다');
+    }
+    // todo: push 할 때 맨 앞에 가장 최근 아이템이 들어오니까 pop 할 때도 맨 앞에 있는 아이템을 꺼내야 한다.
+    const latestItem = this.#first.item;
+    this.#first = this.#first.next;
+
+    this.#numberOfItem -= 1;
+
+    return latestItem;
   }
 
   [Symbol.iterator]() {
-    let numberOfItem = this.#numberOfItem;
-    const items = this.#items;
-
+    let current = this.#first;
     return {
       next() {
-        numberOfItem = numberOfItem - 1;
-        return numberOfItem >= 0 ? { done: false, value: items[numberOfItem] } : { done: true };
+        if (current === undefined) {
+          return { done: true };
+        }
+
+        const value = current.item;
+        current = current.next;
+
+        return { done: false, value };
       },
     };
   }
