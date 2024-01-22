@@ -1,4 +1,65 @@
+class Node {
+  item;
+
+  next;
+}
+
 class Stack {
+  #first;
+
+  #numberOfItem;
+
+  constructor() {
+    this.#numberOfItem = 0;
+  }
+
+  isEmpty() {
+    return this.#numberOfItem === 0;
+  }
+
+  size() {
+    return this.#numberOfItem;
+  }
+
+  push(item) {
+    // todo : 맨 앞에 아이템을 넣는 방식.
+    const oldFirst = this.#first;
+
+    this.#first = new Node();
+    this.#first.item = item;
+    this.#first.next = oldFirst;
+
+    this.#numberOfItem += 1;
+  }
+
+  pop() {
+    if (this.isEmpty()) {
+      throw new Error('스택이 비어있습니다');
+    }
+    // todo: push 할 때 맨 앞에 가장 최근 아이템이 들어오니까 pop 할 때도 맨 앞에 있는 아이템을 꺼내야 한다.
+    const latestItem = this.#first.item;
+    this.#first = this.#first.next;
+
+    this.#numberOfItem -= 1;
+
+    return latestItem;
+  }
+
+  [Symbol.iterator]() {
+    let current = this.#first;
+    return {
+      next() {
+        if (current === undefined) {
+          return { done: true };
+        }
+
+        const value = current.item;
+        current = current.next;
+
+        return { done: false, value };
+      },
+    };
+  }
 }
 
 test('스택을 생성하면 비어있다', () => {

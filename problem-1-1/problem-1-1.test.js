@@ -1,4 +1,51 @@
+class Node {
+  item;
+
+  next;
+}
+
 class Bag {
+  #first;
+
+  #numberOfItems;
+
+  constructor() {
+    this.#numberOfItems = 0;
+  }
+
+  size() {
+    return this.#numberOfItems;
+  }
+
+  isEmpty() {
+    return this.#numberOfItems === 0;
+  }
+
+  add(item) {
+    const oldFirst = this.#first;
+
+    this.#first = new Node();
+    this.#first.item = item;
+    this.#first.next = oldFirst;
+
+    this.#numberOfItems += 1;
+  }
+
+  [Symbol.iterator]() {
+    let current = this.#first;
+    return {
+      next() {
+        if (current === undefined) {
+          return { done: true };
+        }
+
+        const value = current.item;
+        current = current.next;
+
+        return { done: false, value };
+      },
+    };
+  }
 }
 
 test('백은 비어있는 상태로 생성된다', () => {
