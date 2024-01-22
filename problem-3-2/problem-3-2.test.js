@@ -1,7 +1,7 @@
 class Node {
-  #item;
+  item;
 
-  #next;
+  next;
 }
 
 class Queue {
@@ -78,14 +78,13 @@ const createNumberArray = (itemCount) => {
   return resultArray;
 };
 
-const solution = (N, M) => {
-  const numberOfPersons = N;
-  const deathLocation = M;
-
+const solution = (numberOfPersons, deathLocation) => {
   const persons = createNumberArray(numberOfPersons);
 
   const queue = new Queue();
-  persons.forEach((person) => queue.enqueue(person));
+  persons.forEach((person) => {
+    queue.enqueue(person);
+  });
 
   while (queue.size() > 1) {
     for (let index = 0; index < deathLocation - 1; index += 1) {

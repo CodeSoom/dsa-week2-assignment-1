@@ -1,7 +1,7 @@
 class Node {
-  #item;
+  item;
 
-  #next;
+  next;
 }
 
 class Stack {
