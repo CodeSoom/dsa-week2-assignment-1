@@ -1,4 +1,11 @@
-const solution = (numbers) => {
+const solution = (numbers = []) => {
+  if(numbers.length === 0) return 0;
+  
+  const total = numbers.reduce((acc, curr) => acc + curr, 0),
+        average = total / numbers.length;
+
+  return Math.floor(average);
+  
 };
 
 test('숫자 배열의 평균을 반환한다', () => {
